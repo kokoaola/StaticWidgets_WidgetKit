@@ -88,25 +88,27 @@ sqlファイルの引っ越し
 2. xxxxIntent.intentdefinitionファイルを作る
     - ファイルの新規作成 - Siri Kit Intentdefinition File - TargetはAppとExtension両方 - xxxxIntent.intentdefinitionって名前で保存
     - 生成されたファイルの左下の＋からNewEnum - 名前を変更して作成 - casesからユーザーに選択させるタイプを好きなだけ作る - DisplayNameは必要に応じて記入
-    - 左下の＋からNewIntent - xxxxIntentを作成 - CategoryをDo - Title(入力済み)とDescription
-    (任意)を記入 - Intent is eligible for widgetにチェック(Siri 用ではなくウィジェット用に作成しているため)、それ以外をアンチェック 
+    - 左下の＋からNewIntent - xxxxIntentを作成 - CategoryをDo - Title(入力済み)とDescription(任意)を記入 - Intent is eligible for widgetにチェック(Siri 用ではなくウィジェット用に作成しているため)、それ以外をアンチェック 
     - parameter＋でコード中で使用する変数名を追加 - Type(型)を選択する(新しく作ったenumのカスタム型も使用可) - Siri can ask...をアンチェック - defaultの色を決める
 3. ウィジェット作る
     - 「２つめ以降のウィジェットを１から自分で追加する」の手順と同様
     - xxxxWidgetTimelineProvider.swiftはIntentTimelineProviderプロトコルに準拠することに注意、getTimelineメソッドも少し特殊(詳細はMasteringWidgetKit/ColorWidget/ColorWidgetTimelineProvider.swift参照)
     - WidgetファイルはIntentConfigurationを使用
 
-###  ユーザーがウィジェットに表示されるコンテンツを選択できるようにする ＋ Intentエクステンション
+###  ユーザーがウィジェットに表示されるコンテンツを選択できるようにする(オリジナルの型を選択させる、拡張機能IntentExtensionが必要)
 1. 最初の導入済ませる
 2. xxxxIntent.intentdefinitionファイルを作る
-    - 基本的には上の２と同じ
-    - IntentファイルでEnumではなくType(xxxxConfigration)を追加する
-    - CategoryをViewにする
-    - Typeを新しく作ったカスタムタイプにする
-    - User Can Edit...とOptions are provided...にチェック
+    - ファイルの新規作成 - Siri Kit Intentdefinition File - TargetはAppとExtension両方 - xxxxIntent.intentdefinitionって名前で保存
+    - 右下の＋からNewTypeを追加、XxxxSymbolって名前
+    - 左下の＋からNewIntent - XxxxConfigrationを作成 
+    - CategoryをView - Title(入力済み)とDescription(任意)を記入 
+    - Intent is eligible for widgetにチェック(Siri 用ではなくウィジェット用に作成しているため)、それ以外をアンチェック 
+    - parameter＋で作ったXxxxSymbolの頭を小文字にした名前を追加
+    - ParametersのTypeのプルダウンで新しく作ったカスタムタイプを選択
+    - Siri can ask...をアンチェック - User Can Edit...とOptions are provided...にチェック
 3. Intentエクステンションを追加する
-    - New - Target - Intents Extensionを検索 - ファイル名はxxxxIntent, StartingPointはNone, IncludeUI...のチェックは外す, Embed...はプロジェクトを選択
-    - xxxxIntent.intentdefinitionファイルのターゲットにIntentExtensionを追加する
+    - New - Target - Intents Extensionを検索 - ファイル名はXxxxIntent, StartingPointはNone, IncludeUI...のチェックは外す, Embed...はプロジェクトを選択
+    - xxxxIntent.intentdefinitionファイルのターゲットはプロジェクト、ウィジェットのエクステンション、xxxxIntentすべてにチェック
 4. Intentハンドラー
     - Intentハンドラーを自動生成されたxxxxConfigrationIntentHandlingプロトコルに準拠させる
 
@@ -207,3 +209,15 @@ if #available(iOS 16.1, *){
 - ライブアクティビティとダイナミックアイランド
 - ダイナミックアイランドにアイコンを表示させる
 - AppのプロジェクトとWidgetのプロジェクト
+
+
+
+# ビルド時にエラーが出る時
+Xcodeのスキームを編集:
+Xcodeのメニューバーで「Product」→「Scheme」→「Edit Scheme」を選択します。
+環境変数を設定:
+「Run」セクションを選び、「Arguments」タブの下にある「Environment Variables」セクションを見つけます。
+新しい環境変数を追加し、キーとして_XCWidgetKindを設定します。
+値として、エラーメッセージに示されたウィジェットの種類のいずれか（例: amatnug.amatnug.PhostoWidget）を指定します。
+変更を保存して再実行:
+変更を保存し、ウィジェットを再度実行します。これにより、エラーが解消されるはずです。
